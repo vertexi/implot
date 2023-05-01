@@ -3900,8 +3900,67 @@ bool DragLineX(int n_id, double* value, const ImVec4& col, float thickness, ImPl
     return dragging;
 }
 
+bool BeginDragLineXPopup(int n_id, double value) {
+    ImPlotContext& gp = *GImPlot;
+    IM_ASSERT_USER_ERROR(gp.CurrentItems != nullptr, "BeginLegendPopup() needs to be called within an itemized context!");
+    SetupLock();
+    ImGuiWindow* window = GImGui->CurrentWindow;
+    if (window->SkipItems)
+        return false;
+    ImGuiID id = ImGui::GetIDWithSeed(n_id, gp.CurrentItems->ID);
+
+    const float grab_half_size = ImMax(DRAG_GRAB_HALF_SIZE, 1.0f/2);
+    float yt = gp.CurrentPlot->PlotRect.Min.y;
+    float yb = gp.CurrentPlot->PlotRect.Max.y;
+    float x  = IM_ROUND(PlotToPixels(value,0,IMPLOT_AUTO,IMPLOT_AUTO).x);
+    ImRect rect(x-grab_half_size,yt,x+grab_half_size,yb);
+    bool hovered = false, held = false;
+    ImGui::ButtonBehavior(rect,id,&hovered,&held);
+
+    ImGui::KeepAliveID(id);
+    if (ImGui::IsMouseReleased(1)) {
+        if (hovered)
+        {
+           ImGui::OpenPopupEx(id);
+        }
+    }
+    return ImGui::BeginPopupEx(id, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoSavedSettings);
+}
+
+bool BeginDragLineYPopup(int n_id, double value) {
+    ImPlotContext& gp = *GImPlot;
+    IM_ASSERT_USER_ERROR(gp.CurrentItems != nullptr, "BeginLegendPopup() needs to be called within an itemized context!");
+    SetupLock();
+    ImGuiWindow* window = GImGui->CurrentWindow;
+    if (window->SkipItems)
+        return false;
+    ImGuiID id = ImGui::GetIDWithSeed(n_id, gp.CurrentItems->ID);
+
+    const float grab_half_size = ImMax(DRAG_GRAB_HALF_SIZE, 1.0f/2);
+    float xl = gp.CurrentPlot->PlotRect.Min.x;
+    float xr = gp.CurrentPlot->PlotRect.Max.x;
+    float y  = IM_ROUND(PlotToPixels(0, value,IMPLOT_AUTO,IMPLOT_AUTO).y);
+    ImRect rect(xl,y-grab_half_size,xr,y+grab_half_size);
+    bool hovered = false, held = false;
+    ImGui::ButtonBehavior(rect,id,&hovered,&held);
+
+    ImGui::KeepAliveID(id);
+    if (ImGui::IsMouseReleased(1)) {
+        if (hovered)
+        {
+           ImGui::OpenPopupEx(id);
+        }
+    }
+    return ImGui::BeginPopupEx(id, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoSavedSettings);
+}
+
+void EndDragLinePopup() {
+    SetupLock();
+    ImGui::EndPopup();
+}
+
 bool DragLineY(int n_id, double* value, const ImVec4& col, float thickness, ImPlotDragToolFlags flags) {
-    ImGui::PushID("#IMPLOT_DRAG_LINE_Y");
+    // ImGui::PushID("#IMPLOT_DRAG_LINE_Y");
     ImPlotContext& gp = *GImPlot;
     IM_ASSERT_USER_ERROR(gp.CurrentPlot != nullptr, "DragLineY() needs to be called between BeginPlot() and EndPlot()!");
     SetupLock();
@@ -3948,7 +4007,7 @@ bool DragLineY(int n_id, double* value, const ImVec4& col, float thickness, ImPl
     DrawList.AddLine(ImVec2(xr,y), ImVec2(xr-len,y), col32, 3*thickness);
     PopPlotClipRect();
 
-    ImGui::PopID();
+    // ImGui::PopID();
     return dragging;
 }
 

@@ -1010,8 +1010,11 @@ IMPLOT_API void EndAlignedPlots();
 
 // Begin a popup for a legend entry.
 IMPLOT_API bool BeginLegendPopup(const char* label_id, ImGuiMouseButton mouse_button=1);
+IMPLOT_API bool BeginDragLineYPopup(int n_id, double value);
+IMPLOT_API bool BeginDragLineXPopup(int n_id, double value);
 // End a popup for a legend entry.
 IMPLOT_API void EndLegendPopup();
+IMPLOT_API void EndDragLinePopup();
 // Returns true if a plot item legend entry is hovered.
 IMPLOT_API bool IsLegendEntryHovered(const char* label_id);
 
