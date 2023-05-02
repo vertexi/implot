@@ -1012,6 +1012,9 @@ IMPLOT_API void EndAlignedPlots();
 IMPLOT_API bool BeginLegendPopup(const char* label_id, ImGuiMouseButton mouse_button=1);
 IMPLOT_API bool BeginDragLineYPopup(int n_id, double value);
 IMPLOT_API bool BeginDragLineXPopup(int n_id, double value);
+bool BeginDragLineXTooltip(int n_id, double value);
+bool BeginDragLineYTooltip(int n_id, double value);
+void EndDragLineTooltip();
 // End a popup for a legend entry.
 IMPLOT_API void EndLegendPopup();
 IMPLOT_API void EndDragLinePopup();

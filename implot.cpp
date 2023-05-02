@@ -3900,6 +3900,56 @@ bool DragLineX(int n_id, double* value, const ImVec4& col, float thickness, ImPl
     return dragging;
 }
 
+bool BeginDragLineXTooltip(int n_id, double value) {
+    ImPlotContext& gp = *GImPlot;
+    IM_ASSERT_USER_ERROR(gp.CurrentItems != nullptr, "BeginLegendPopup() needs to be called within an itemized context!");
+    SetupLock();
+    ImGuiWindow* window = GImGui->CurrentWindow;
+    if (window->SkipItems)
+        return false;
+    ImGuiID id = ImGui::GetIDWithSeed(n_id, gp.CurrentItems->ID);
+
+    const float grab_half_size = ImMax(DRAG_GRAB_HALF_SIZE, 1.0f/2);
+    float yt = gp.CurrentPlot->PlotRect.Min.y;
+    float yb = gp.CurrentPlot->PlotRect.Max.y;
+    float x  = IM_ROUND(PlotToPixels(value,0,IMPLOT_AUTO,IMPLOT_AUTO).x);
+    ImRect rect(x-grab_half_size,yt,x+grab_half_size,yb);
+    bool hovered = false, held = false;
+    ImGui::ButtonBehavior(rect,id,&hovered,&held);
+
+    ImGui::KeepAliveID(id);
+    if (hovered)
+        return ImGui::BeginTooltip();
+    return false;
+}
+
+bool BeginDragLineYTooltip(int n_id, double value) {
+    ImPlotContext& gp = *GImPlot;
+    IM_ASSERT_USER_ERROR(gp.CurrentItems != nullptr, "BeginLegendPopup() needs to be called within an itemized context!");
+    SetupLock();
+    ImGuiWindow* window = GImGui->CurrentWindow;
+    if (window->SkipItems)
+        return false;
+    ImGuiID id = ImGui::GetIDWithSeed(n_id, gp.CurrentItems->ID);
+
+    const float grab_half_size = ImMax(DRAG_GRAB_HALF_SIZE, 1.0f/2);
+    float xl = gp.CurrentPlot->PlotRect.Min.x;
+    float xr = gp.CurrentPlot->PlotRect.Max.x;
+    float y  = IM_ROUND(PlotToPixels(0, value,IMPLOT_AUTO,IMPLOT_AUTO).y);
+    ImRect rect(xl,y-grab_half_size,xr,y+grab_half_size);
+    bool hovered = false, held = false;
+    ImGui::ButtonBehavior(rect,id,&hovered,&held);
+
+    ImGui::KeepAliveID(id);
+    if (hovered)
+        return ImGui::BeginTooltip();
+    return false;
+}
+
+void EndDragLineTooltip() {
+    ImGui::EndTooltip();
+}
+
 bool BeginDragLineXPopup(int n_id, double value) {
     ImPlotContext& gp = *GImPlot;
     IM_ASSERT_USER_ERROR(gp.CurrentItems != nullptr, "BeginLegendPopup() needs to be called within an itemized context!");
