@@ -4107,7 +4107,7 @@ void EndDragLinePopup() {
     ImGui::EndPopup();
 }
 
-bool DragLineY(int n_id, double* value, const ImVec4& col, float thickness, ImPlotDragToolFlags flags) {
+bool DragLineY(int n_id, double* value, const ImVec4& col, float thickness, ImPlotDragToolFlags flags, bool* out_clicked, bool* out_hovered, bool* out_held) {
     // ImGui::PushID("#IMPLOT_DRAG_LINE_Y");
     ImPlotContext& gp = *GImPlot;
     IM_ASSERT_USER_ERROR(gp.CurrentPlot != nullptr, "DragLineY() needs to be called between BeginPlot() and EndPlot()!");
@@ -4160,7 +4160,7 @@ bool DragLineY(int n_id, double* value, const ImVec4& col, float thickness, ImPl
     PopPlotClipRect();
 
     // ImGui::PopID();
-    return dragging;
+    return modified;
 }
 
 bool DragRect(int n_id, double* x_min, double* y_min, double* x_max, double* y_max, const ImVec4& col, ImPlotDragToolFlags flags, bool* out_clicked, bool* out_hovered, bool* out_held) {
